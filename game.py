@@ -27,10 +27,11 @@ obstacle1 = pygame.transform.scale(obstacle,(50,HGHT/2))
 obstacle2 = pygame.transform.scale(obstacle,(50,HGHT/2))
 door = pygame.image.load("img/door.png")
 door = pygame.transform.scale(door,(50,80))
+door = pygame.transform.rotate(door,180)
 
 def main_menu():
-    start_button = ImageButton(WDTH/2-(252/2), 150, 252, 74, "Новая игра", "img/Gravity.jpg", "img/left/left1.png")
-    exit_button = ImageButton(WDTH/2-(252/2), 250, 252, 74, "Выход", "img/Gravity.jpg", "img/left/left1.png")
+    start_button = ImageButton(WDTH/2-(252/2), 150, 252, 74, "Новая игра", "img/Button1.png", "img/Button1_pressed.png")
+    exit_button = ImageButton(WDTH/2-(252/2), 250, 252, 74, "Выход", "img/Button1.png", "img/Button1_pressed.png")
 
     running = True
     while running:
@@ -38,7 +39,7 @@ def main_menu():
         menu_screen.blit(menu_background, (0,0))
 
         font = pygame.font.Font(None, 72)
-        text_surface = font.render("MENU TEST", True, (255,255,255))
+        text_surface = font.render("Menu", True, (255,255,255))
         text_rect = text_surface.get_rect(center=(WDTH/2, 100))
         menu_screen.blit(text_surface, text_rect)
 
@@ -118,19 +119,29 @@ def game():
         screen.blit(obstacle2,(500,HGHT/2))
         screen.blit(obstacle1,(700,0))
         screen.blit(door,(800,50))
-        screen.blit(text_surface,text_rect)
 
-        if 700 < player_x < 900 and 0 < player_y < 120:
+        if 750 < player_x < 900 and 0 < player_y < 120:
             screen.blit(text_surface,text_rect)
 
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_LEFT]:
-            screen.blit(walk_left[player_anim_count], (player_x, player_y))
+            
+            if player_y < 300:
+                screen.blit(pygame.transform.rotate(walk_right[player_anim_count],180), (player_x, player_y))
+            else:
+                screen.blit(walk_left[player_anim_count], (player_x, player_y))
+            
         elif keys[pygame.K_RIGHT]:
-            screen.blit(walk_right[player_anim_count], (player_x, player_y))
+            if player_y < 300:
+                screen.blit(pygame.transform.rotate(walk_left[player_anim_count],180), (player_x, player_y))
+            else:
+                screen.blit(walk_right[player_anim_count], (player_x, player_y))
         else:
-            screen.blit(player_still, (player_x, player_y))
+            if player_y < 300:
+                screen.blit(pygame.transform.rotate(player_still,180), (player_x, player_y))
+            else:
+                screen.blit(player_still, (player_x, player_y))
 
         if keys[pygame.K_LEFT] and player_x > 50:
             player_x -= player_speed
